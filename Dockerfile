@@ -1,7 +1,5 @@
 FROM ubuntu:18.04
 
-MAINTAINER Dominic Webb
-
 ENV ANDROID_HOME="/opt/android-sdk" \
     ANDROID_NDK="/opt/android-ndk" \
     JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
@@ -133,9 +131,7 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
     echo "Installing Google APIs" && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "add-ons;addon-google_apis-google-24" \
-        "add-ons;addon-google_apis-google-23" > /dev/null && \
-    echo "Installing emulator " && \
-    yes | "$ANDROID_HOME"/tools/bin/sdkmanager "emulator" > /dev/null && \
+        "add-ons;addon-google_apis-google-23" > /dev/null
 
 
 # Copy sdk license agreement files.
