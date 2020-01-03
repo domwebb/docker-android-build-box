@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 
 ENV ANDROID_HOME="/opt/android-sdk" \
-    ANDROID_NDK="/opt/android-ndk" \
     JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
 # Get the latest version from https://developer.android.com/studio/index.html
@@ -26,9 +25,8 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 
 # Variables must be references after they are created
 ENV ANDROID_SDK_HOME="$ANDROID_HOME"
-ENV ANDROID_NDK_HOME="$ANDROID_NDK/android-ndk-r$ANDROID_NDK_VERSION"
 
-ENV PATH="$PATH:$ANDROID_SDK_HOME/emulator:$ANDROID_SDK_HOME/tools/bin:$ANDROID_SDK_HOME/tools:$ANDROID_SDK_HOME/platform-tools:$ANDROID_NDK"
+ENV PATH="$PATH:$ANDROID_SDK_HOME/emulator:$ANDROID_SDK_HOME/tools/bin:$ANDROID_SDK_HOME/tools:$ANDROID_SDK_HOME/platform-tools"
 
 COPY README.md /README.md
 
@@ -63,6 +61,7 @@ RUN apt-get update -qq > /dev/null && \
         openjdk-8-jdk \
         openssh-client \
         pkg-config \
+        python-dev \
         software-properties-common \
         ruby-full \
         software-properties-common \
@@ -70,18 +69,24 @@ RUN apt-get update -qq > /dev/null && \
         wget \
         zip \
         zlib1g-dev > /dev/null && \
-    echo "Installing nodejs, npm, yarn, react-native" && \
+    echo  "Installing PIP"
+    curl -O https://bootstrap.pypa.io/get-pip.py \
+        | bash - > /dev/null && \
+    python get-pip.py > /dev/null && \
+    pip install awscli > /dev/null && \
+    echo "Installing NPM" && \
     curl -sL -k https://deb.nodesource.com/setup_${NODE_VERSION} \
         | bash - > /dev/null && \
     apt-get install -qq nodejs > /dev/null && \
     apt-get clean > /dev/null && \
     rm -rf /var/lib/apt/lists/ && \
     npm install --quiet -g npm > /dev/null && \
-    npm install --quiet -g \
-        node-gyp npm-check-updates \
-        react-native-cli > /dev/null && \
     npm cache clean --force > /dev/null && \
     rm -rf /tmp/* /var/tmp/* && \
+    echo "Installing Yarn" && \
+    curl -o- -L https://yarnpkg.com/install.sh \
+        | bash - > /dev/null && \
+    export PATH=$HOME/.yarn/bin:$PATH
     echo "Installing fastlane" && \
     gem install fastlane --quiet --no-document > /dev/null && \
     gem install bundler --quiet --no-document > /dev/null
@@ -93,12 +98,7 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
     mkdir --parents "$ANDROID_HOME" && \
     unzip -q sdk-tools.zip -d "$ANDROID_HOME" && \
     rm --force sdk-tools.zip && \
-    echo "Installing ndk r${ANDROID_NDK_VERSION}" && \
-    wget --quiet --output-document=android-ndk.zip \
-    "http://dl.google.com/android/repository/android-ndk-r${ANDROID_NDK_VERSION}-linux-x86_64.zip" && \
-    mkdir --parents "$ANDROID_NDK_HOME" && \
-    unzip -q android-ndk.zip -d "$ANDROID_NDK" && \
-    rm --force android-ndk.zip && \
+
 # Install SDKs
 # Please keep these in descending order!
 # The `yes` is for accepting all non-standard tool licenses.
@@ -117,21 +117,14 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
         "build-tools;29.0.2"  > /dev/null && \
     echo "Installing build tools " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "build-tools;23.0.3" "build-tools;23.0.2" "build-tools;23.0.1" \
-        "build-tools;22.0.1" > /dev/null && \
-    echo "Installing extras " && \
-    yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "extras;android;m2repository" \
-        "extras;google;m2repository" > /dev/null && \
+        "build-tools;23.0.3"  > /dev/null && \
     echo "Installing play services " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "extras;google;google_play_services" \
-        "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
-        "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1" > /dev/null && \
+        "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" > /dev/null && \
     echo "Installing Google APIs" && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "add-ons;addon-google_apis-google-24" \
-        "add-ons;addon-google_apis-google-23" > /dev/null
+        "add-ons;addon-google_apis-google-24" > /dev/null
 
 
 # Copy sdk license agreement files.

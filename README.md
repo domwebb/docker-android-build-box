@@ -1,9 +1,5 @@
 # Docker Android Build Box
 
-[![docker icon](https://dockeri.co/image/mingc/android-build-box)](https://hub.docker.com/r/mingc/android-build-box/)
-[![Build Status](https://travis-ci.org/mingchen/docker-android-build-box.svg?branch=master)](https://travis-ci.org/mingchen/docker-android-build-box)
-
-
 ## Introduction
 
 A **docker** image build with **Android** build environment.
@@ -18,17 +14,18 @@ It includes the following components:
 * Android build tools:
   * 29.0.2
 * Android NDK r20
-* extra-android-m2repository
-* extra-google-m2repository
 * extra-google-google\_play\_services
 * Google API add-ons
-* Android Emulator
 * Constraint Layout
 * TestNG
-* Python 2, Python 3
-* Node.js, npm, yarn, React Native
-* Ruby, RubyGems
-* fastlane
+* Python 2, Python 3, PIP
+* Node.js, 
+* NPM
+* Yarn
+* Ruby
+* RubyGems
+* Fastlane
+* AWS Cli
 
 
 ## Pull Docker Image
