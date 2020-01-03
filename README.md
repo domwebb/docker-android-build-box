@@ -11,9 +11,7 @@ It includes the following components:
 
 * Ubuntu 18.04
 * Android SDK 29
-* Android build tools:
-  * 29.0.2
-* Android NDK r20
+* Android build tools 29.0.2
 * extra-google-google\_play\_services
 * Google API add-ons
 * Constraint Layout

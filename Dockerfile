@@ -35,8 +35,9 @@ WORKDIR /tmp
 # Installing packages
 RUN apt-get update -qq > /dev/null && \
     apt-get install -qq locales > /dev/null && \
-    locale-gen "$LANG" > /dev/null && \
-    apt-get install -qq --no-install-recommends \
+    locale-gen "$LANG" > /dev/null
+
+RUN apt-get install -qq --no-install-recommends \
         build-essential \
         autoconf \
         curl \
@@ -68,13 +69,15 @@ RUN apt-get update -qq > /dev/null && \
         unzip \
         wget \
         zip \
-        zlib1g-dev > /dev/null && \
-    echo  "Installing PIP"
+        zlib1g-dev > /dev/null
+
+RUN echo  "Installing PIP" && \
     curl -O https://bootstrap.pypa.io/get-pip.py \
         | bash - > /dev/null && \
     python get-pip.py > /dev/null && \
-    pip install awscli > /dev/null && \
-    echo "Installing NPM" && \
+    pip install awscli > /dev/null
+
+RUN echo "Installing NPM" && \
     curl -sL -k https://deb.nodesource.com/setup_${NODE_VERSION} \
         | bash - > /dev/null && \
     apt-get install -qq nodejs > /dev/null && \
@@ -82,12 +85,14 @@ RUN apt-get update -qq > /dev/null && \
     rm -rf /var/lib/apt/lists/ && \
     npm install --quiet -g npm > /dev/null && \
     npm cache clean --force > /dev/null && \
-    rm -rf /tmp/* /var/tmp/* && \
-    echo "Installing Yarn" && \
+    rm -rf /tmp/* /var/tmp/*
+
+RUN echo "Installing Yarn" && \
     curl -o- -L https://yarnpkg.com/install.sh \
         | bash - > /dev/null && \
-    export PATH=$HOME/.yarn/bin:$PATH
-    echo "Installing fastlane" && \
+    export PATH=$HOME/.yarn/bin:$PATH 
+
+RUN echo "Installing fastlane" && \
     gem install fastlane --quiet --no-document > /dev/null && \
     gem install bundler --quiet --no-document > /dev/null
 
