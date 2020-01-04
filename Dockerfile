@@ -92,6 +92,9 @@ RUN echo "Installing Yarn" && \
         | bash - > /dev/null && \
     export PATH=$HOME/.yarn/bin:$PATH 
 
+RUN echo "Updating Gems" && \
+    gem update --system > /dev/null
+
 RUN echo "Installing fastlane" && \
     gem install fastlane --quiet --no-document > /dev/null && \
     gem install bundler --quiet --no-document > /dev/null
@@ -119,10 +122,7 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
         "platform-tools" > /dev/null && \
     echo "Installing build tools " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "build-tools;29.0.2"  > /dev/null && \
-    echo "Installing build tools " && \
-    yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "build-tools;23.0.3"  > /dev/null && \
+        "build-tools;29.0.5"  > /dev/null && \
     echo "Installing play services " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "extras;google;google_play_services" \
