@@ -122,7 +122,7 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
         "platform-tools" > /dev/null && \
     echo "Installing build tools " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "build-tools;29.0.5"  > /dev/null && \
+        "build-tools;29.0.2"  > /dev/null && \
     echo "Installing play services " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "extras;google;google_play_services" \
